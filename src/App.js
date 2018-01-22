@@ -23,6 +23,11 @@ class App extends Component {
     this.getCards = this.getCards.bind(this);
     this.flipCard = this.flipCard.bind(this);
     this.checkMatch = this.checkMatch.bind(this);
+    this.newGame = this.newGame.bind(this);
+  }
+  
+  newGame() {
+    this.setState({cards: this.getCards(), prevId: null});
   }
   
   // returns an array of color pairs in random order.
@@ -52,7 +57,7 @@ class App extends Component {
     cards[id] = Object.assign({}, cards[id]);
     cards[id].isFaceUp = !cards[id].isFaceUp;
     this.setState({cards}, () => {
-      setTimeout(() => this.checkMatch(id), 1000);
+      setTimeout(() => this.checkMatch(id), 500);
     });
   }
   
@@ -85,7 +90,7 @@ class App extends Component {
     
     return (
       <div>
-        <Header />
+        <Header newGame={this.newGame}/>
         <div className='cardList'>
           { cards }
         </div>
