@@ -16,11 +16,13 @@ class App extends Component {
       ]
     */
     this.state = {
-      cards: this.getCards()
+      cards: this.getCards(),
+      prevId: null
     };
     
     this.getCards = this.getCards.bind(this);
     this.flipCard = this.flipCard.bind(this);
+    this.checkMatch = this.checkMatch.bind(this);
   }
   
   // returns an array of color pairs in random order.
@@ -45,10 +47,35 @@ class App extends Component {
   
   // flip card with id.
   flipCard(id) {
+    if (this.state.cards[id].isMatched) return;
     let cards = this.state.cards.slice();
     cards[id] = Object.assign({}, cards[id]);
     cards[id].isFaceUp = !cards[id].isFaceUp;
-    this.setState({cards});
+    this.setState({cards}, () => {
+      setTimeout(() => this.checkMatch(id), 1000);
+    });
+  }
+  
+  checkMatch(id) {
+    let prevId = this.state.prevId;
+    if (id === prevId) {
+      prevId = null;
+      this.setState({prevId});
+      return;
+    }
+    let cards = this.state.cards.slice();
+    cards[id] = Object.assign({}, cards[id]);
+    cards[prevId] = Object.assign({}, cards[prevId]);
+    if (prevId && cards[id].color === cards[prevId].color) {
+      cards[prevId].isMatched = true;
+      cards[id].isMatched = true;
+      prevId = null;
+    } else if (prevId || prevId === 0) {
+      cards[prevId].isFaceUp = false;
+      cards[id].isFaceUp = false;
+      prevId = null;
+    } else prevId = id;
+    this.setState({cards, prevId});
   }
   
   render() {
