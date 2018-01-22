@@ -69,7 +69,7 @@ class App extends Component {
 
 App.defaultProps = {
   colors: [
-    "#98cec7","#166dba","#b72817","#75ba16",
+    "#99f7f2","#166dba","#b72817","#75ba16",
     "#ba7016","#e886d5","#4716ba","#bab116"
   ]
 };
