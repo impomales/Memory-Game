@@ -6,36 +6,62 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
+    /* 
+      cards: [
+        {
+          color: '#ccc',
+          isFaceUp: false,
+          isMatched: false
+        }
+      ]
+    */
     this.state = {
       cards: this.getCards()
     };
     
     this.getCards = this.getCards.bind(this);
+    this.flipCard = this.flipCard.bind(this);
   }
   
   // returns an array of color pairs in random order.
   getCards() {
     let cards = [];
     let colors = this.props.colors.concat(this.props.colors);
-    const NUM_CARDS = colors.length * 2;
+    const NUM_CARDS = colors.length;
       
     for (let i = 0; i < NUM_CARDS; i++) {
       let randomIndx = Math.floor(Math.random() * colors.length);
-      cards.push(colors[randomIndx]);
+      let cardObjct = {
+        id: i,
+        color: colors[randomIndx],
+        isFaceUp: false,
+        isMatched: false
+      };
+      cards.push(cardObjct);
       colors.splice(randomIndx, 1);
     }
     return cards;
   }
   
+  // flip card with id.
+  flipCard(id) {
+    let cards = this.state.cards.slice();
+    cards[id] = Object.assign({}, cards[id]);
+    cards[id].isFaceUp = !cards[id].isFaceUp;
+    this.setState({cards});
+  }
+  
   render() {
     const cards = this.state.cards.map((card, index) => (
-      <Card key={index} card={card}/>
+      <Card key={index} {...card} flipCard={this.flipCard}/>
     ));
     
     return (
       <div>
         <Header />
-        { cards }
+        <div className='cardList'>
+          { cards }
+        </div>
       </div>
     );
   }
@@ -43,8 +69,8 @@ class App extends Component {
 
 App.defaultProps = {
   colors: [
-    "Black","Blue","Red","Green",
-    "Orange","Fuchsia","Purple","Yellow"
+    "#98cec7","#166dba","#b72817","#75ba16",
+    "#ba7016","#e886d5","#4716ba","#bab116"
   ]
 };
 
